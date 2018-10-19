@@ -1,0 +1,21 @@
+<% include ../partials/header %>
+
+<div class="container adminProductAdding">
+	<form action='/add/line' method='post'>
+	  <div class="form-group">
+	    <label>Line name</label>
+	    <input type="text" name='name' class="form-control" placeholder="Desired line name">
+	  </div>
+	  <div class="form-group">
+	    <label>Line Thumbnail</label>
+	    <input type="text" name='image' class="form-control" placeholder="Desired line thumbnail">
+	  </div>
+	  <div class="form-group">
+	    <label>Line description</label>
+	    <textarea name='description' class="form-control" rows="4" placeholder="Porudct Description"></textarea>
+	  </div>
+	  <button type="submit" class="btn btn-success mb-2">Add new line of products</button>
+	</form>
+</div>
+
+<% include ../partials/footer %>

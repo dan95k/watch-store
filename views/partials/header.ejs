@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Watch Store</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<a class="navbar-brand" href="/"><i class="far fa-clock fa-lg"></i></a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+	    <ul class="navbar-nav mr-auto">
+	      <li class="nav-item">
+	        <a class="nav-link" href="/">Home</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="/about">About Us</a>
+	      </li>
+	    </ul>
+
+	    <% if(!currentUser){ %>
+	    <div class="dropdown">
+	    	<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fas fa-sign-in-alt"></i> Login</a>
+		<div class="dropdown-menu dropdown-menu-right">
+			  <form class="px-4 py-3" action='/login' method='post'>
+			    <div class="form-group">
+			      <label>Username</label>
+			      <input type="text" class="form-control" name='username' placeholder="Username">
+			    </div>
+			    <div class="form-group">
+			      <label>Password</label>
+			      <input type="password" class="form-control" name='password' placeholder="Password">
+			    </div>
+			    <button type="submit" class="btn btn-primary btn-sm btn-block">Sign in</button>
+			  </form>
+			  <div class="dropdown-divider"></div>
+			  <a class="dropdown-item" href="/register">New around here? Sign up</a>
+			  <a class="dropdown-item" href="/forgot-password">Forgot password?</a>
+		</div>
+		</div>
+				<div class="nav-item">
+	        		<a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Register</a>
+	        	</div>
+	        	<% } else { %>
+	        	<% if(currentUser.isAdmin === true){ %>
+
+	      <div class="nav-item dropdown">
+	        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	          <i class="fas fa-address-card"></i> Owner options
+	        </a>
+	        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+	          <a class="dropdown-item" href="/add/line">Add new line of products</a>
+	          <a class="dropdown-item" href="/add/product">Add new product</a>
+	          <div class="dropdown-divider"></div>
+	          <a class="dropdown-item" href="/delete/line">Delete a line of products</a>
+	          <a class="dropdown-item" href="/delete/product">Delete a product</a>
+	          <div class="dropdown-divider"></div>
+	          <a class="dropdown-item" href="/user/orders">Pending Orders</a>
+	        </div>
+	      </div>
+
+	        	<% } %>
+	        	<!-- Shopping cart -->
+		      <div class="nav-item dropdown">
+		        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		          <i class="fas fa-shopping-cart"></i> Shopping Cart <span class="badge badge-pill badge-light"><%=currentUser.cart.length%></span>
+		        </a>
+		        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="width: 400px;">
+		          <h6 class="dropdown-header">Items In Cart: <%=currentUser.cart.length%></h6>
+		          <div class="dropdown-divider"></div>
+		          <% if(!currentUser.cart['0']){ %> <!-- no items in cart -->
+		          <a class="dropdown-item" href="#">Cart is empty</a>
+		          <% } if(currentUser.cart['0'] && !currentUser.cart['1']) { %> <!-- 1 item in cart -->
+		          			<span class="dropdown-item row">
+					  			<span class="col-md-10 col-sm-9">
+					  				<a target="_blank" rel="noopener noreferrer" href="<%=currentUser.cart['0'].image%>"><%=currentUser.cart['0'].model%></a>
+					  			</span>
+					  			<a href="">$<%=currentUser.cart['0'].price%></a>
+					  			<span class="col-md-1 col-sm-3 float-right">
+					  				<!-- remove from cart -->
+					  				<span><a href="/remove-from-cart/<%=currentUser.cart['0']._id%>"><i class="fas fa-times"></i></a></span>
+					  			</span>					  			
+					  		</span>
+		          <% } else {%>
+		          <% currentUser.cart.forEach(function(product){ %> <!-- several items in cart -->
+		          		    <span class="dropdown-item row">
+					  			<span class="col-md-10 col-sm-9">
+					  				<a target="_blank" rel="noopener noreferrer" href="<%=product.image%>"><%=product.model%></a>
+					  			</span>
+					  			<a href="">$<%=product.price%></a>
+					  			<span class="col-md-1 col-sm-3 float-right">
+					  				<!-- remove from cart -->
+					  				<span><a href="/remove-from-cart/<%=product._id%>"><i class="fas fa-times"></i></a></span>
+					  			</span>					  			
+					  		</span>
+		          <% })}; %>
+		          <div class="dropdown-divider"></div>
+		          <h6 class="dropdown-header" style="color: #000; font-weight: bold;">Total: <%=total%> <i class="fas fa-dollar-sign"></i></h6>
+		          <div class="dropdown-divider"></div>
+		          <div class="btn-toolbar">
+		          	<div class="col-md-6">
+		          		<form action="/remove-from-cart" method="post">
+		          			<input type="hidden" name="deleteAll" value='true'>
+		          			<button class="btn btn-outline-secondary btn-block mr-3">Remove All</button>
+		          		</form>	
+		          	</div>
+		          	<div class="col-md-6">
+		          		<form action="/charge" method="post">
+							<script src = "https://checkout.stripe.com/checkout.js"
+								data-key = "pk_test_rsIHIw5j0bDMa3PILkTMwTKU"
+								class = 'stripe-button'
+								data-amount = '<%=total%>00'
+								data-name = 'Hublot Watch store'
+								data-description = 'Purchase from Hublot watch store'
+								data-locale = 'auto'
+								data-shipping-address ="<%=currentUser.mainAddress%>"
+								data-billing-address = 'true'
+								data-email = '<%=currentUser.email%>'
+								data-allow-remember-me ='true'
+								data-currency = 'usd'>
+							</script>
+							<% if(currentUser.cart.length ===0){ %>
+							<button type="button" class="btn btn-outline-danger btn-block" disabled>Cart is empty</button>
+							<% } else { %>
+		          			<button type="submit" class="btn btn-outline-success btn-block"><i class="far fa-credit-card"></i> Pay now</button>
+		          			<% } %>
+		          		</form>
+		          		
+		          	</div>
+		          	
+		          </div>
+		        </div>
+		      </div>
+		      <!-- Shopping cart -->
+	        	<div class="nav-item">
+	        		<a class="nav-link" href="/user/settings"><i class="fas fa-user-edit"></i> User Settings</a>
+	        	</div>
+	        	<div class="nav-item">
+	        		<a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+	        	</div>
+	        	<% } %>
+	</div>
+</nav>
+
+
+    <% if (error && error.length>0){ %>
+      	<div class="alert alert-danger" id='alert-danger' role="alert">
+      	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+   		<span aria-hidden="true">&times;</span>
+  		</button>
+        <div class="header">Oops! Something went wrong</div><p><%= error %></p>
+    </div>
+    <% } %>
+    <% if (success && success.length>0){ %>
+      <div class="alert alert-success" id="success-alert" role="alert">
+      	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+   		<span aria-hidden="true">&times;</span>
+  		</button>
+        <div><%= success %></div>
+    </div>
+    <% } %>

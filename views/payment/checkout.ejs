@@ -1,0 +1,59 @@
+<% include ../partials/header %>
+<div class="container w-50 p-3" style="margin-top: 30px">
+	<div class="card">
+		  <div class="card-header" style="text-align: center">Shipping information</div>
+		<div class="card-body">
+			<h6 class="card-subtitle mb-2 text-muted" style="font-size: 14px">You can change your shipping information here</h6>
+	<form action="/charge" method="post">
+		<!-- Striple payment script -->
+		<script src = "https://checkout.stripe.com/checkout.js"
+			data-key = "pk_test_rsIHIw5j0bDMa3PILkTMwTKU"
+			class = 'stripe-button'
+			data-amount = '<%=total%>00'
+			data-name = 'Marine Watch store'
+			data-description = 'Purchase from Marine watch store'
+			data-locale = 'auto'
+			data-shipping-address ="<%=currentUser.mainAddress%>"
+			data-email = '<%=currentUser.email%>'
+			data-currency = 'usd'>
+		</script>
+		<!-- Striple payment script -->
+		<div class="form-row">
+		    <div class="form-group col-md-6">
+		      <label>Card Holder</label>
+		      <input type="text" class="form-control" placeholder="Card holder name">
+		    </div>
+		    <div class="form-group col-md-6">
+		      <label>Email</label>
+		      <input type="email" class="form-control" value='<%=currentUser.email%>' placeholder="Email">
+		    </div>
+	  	</div>
+	 <div class="form-row">
+		  <div class="form-group col-md-6">
+		    <label>Address</label>
+		    <input type="text" class="form-control" value='<%=currentUser.mainAddress%>' placeholder="Enter your address">
+		  </div>
+		  <div class="form-group col-md-6">
+		    <label>Address 2</label>
+		    <input type="text" class="form-control" value='<%=currentUser.secondAddress%>' placeholder="Enter your secondary address">
+		  </div>
+	</div>
+	  <div class="form-row">
+			<div class="form-group col-md-6">
+		      <label>City</label>
+		      <input type="text" value='<%=currentUser.city%>' placeholder='Enter your city' class="form-control">
+		    </div>
+	    <div class="form-group col-md-6">
+	      <label>Zip</label>
+	      <input type="text" value='<%=currentUser.zip%>' placeholder='enter zip code' class="form-control">
+	    </div>
+	  </div>
+			<button type="submit" class="btn btn-outline-success btn-block"><i class="far fa-credit-card"></i> Pay now</button>
+		</form>
+	</div>
+	</div>
+</div>
+
+
+
+<% include ../partials/footer %>

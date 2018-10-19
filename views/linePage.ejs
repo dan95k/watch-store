@@ -1,0 +1,91 @@
+<% include partials/header %>
+<% var i=0; %>
+<% if(!line.products['0']){ %>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Items currently unavailable</h1>
+    <p class="lead">Lorem ipsum quis do cillum labore consequat culpa dolor cillum deserunt aute consequat velit nostrud in consectetur nostrud deserunt nisi.</p>
+    <a class='btn btn-info btn-sm' href='/'>Go back</a>
+  </div>
+</div>
+<% } else {%>
+<div class="container">
+			<div class="row">
+<% line.products.forEach(function(product){ %>
+          <div class="col-md-6">
+         <div class="card flex-md-row mb-4 shadow-sm h-md-250" id='productCard'>
+            <div class="card-body d-flex flex-column align-items-start">
+               <strong class="d-inline-block mb-2"><%=product.model%></strong>
+            <p>Gender: <%=product.gender%>
+                    <br>
+                Type: <%=product.watchType%>
+                    <br>
+                Water Resistance: <%=product.waterResist%> M
+                    <br>
+                Warranty: <%=product.warranty%>
+            </p>
+               <p class="card-text mb-auto itemDescription"><%=product.description.substring(0,80)%>...</p><br>
+               <div class="row" style="margin-left: 0">
+               <a class="btn btn-outline-primary btn-sm mr-2" data-toggle="modal" data-target="#product_view<%=i%>" role="button" href="/">Read More</a>
+               <form action='/add-to-cart' method="post">
+                <input type="hidden" name="product" value='{"productId":"<%=product._id%>","lineId":"<%=line._id%>"}'>
+                <button type='submit' class="btn btn-outline-success btn-sm">Add To Cart</button>
+              </form>
+               <span id='itemPrice'><%=product.price%>$</span>
+                </div>
+            </div>
+            <img class="card-img-right flex-auto" alt="Thumbnail [200x250]" src="<%=product.image%>" style="width: 200px; height: 250px;">
+         </div>
+      </div>
+
+
+<div class="modal fade product_view" id="product_view<%=i%>">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title"><%=product.model%></h3>
+                <a href="#" data-dismiss="modal" class="class pull-right"><i class="fas fa-times"></i></a>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 product_img">
+                        <img src="<%=product.image%>" class="img-responsive">
+                    </div>
+                    <div class="col-md-6 product_content">
+                                  <div class="card" style="width: 22rem;">
+                                    <ul class="list-group list-group-flush">
+                                      <li class="list-group-item">Model: <strong><%=product.model%></strong></li>
+                                      <li class="list-group-item">Gender: <strong><%=product.gender%></strong></li>
+                                      <li class="list-group-item">Type: <strong><%=product.watchType%></strong></li>
+                                      <li class="list-group-item">Water Resistance: <strong><%=product.waterResist%> Meters</strong></li>
+                                      <li class="list-group-item">Warranty: <strong><%=product.warranty%></strong></li>
+                                    </ul>
+                                  </div>
+
+                        <p class='itemFullDescription'><%=product.description%></p>
+                        <h3 class="cost"><i class="fas fa-dollar-sign"></i><%=product.price%></h3>
+                        <div class="space-ten"></div>
+               <div class="row" style="margin-left: 0">
+                <form action='/add-to-wishlist' method="post">
+                <input type="hidden" name="product" value='{"productId":"<%=product._id%>","lineId":"<%=line._id%>"}'>
+                <button type='submit' class="btn btn-dark mr-3"><i class="far fa-heart"></i>Add To Wishlist</button>
+                </form>
+               <form action='/add-to-cart' method="post">
+                <input type="hidden" name="product" value='{"productId":"<%=product._id%>","lineId":"<%=line._id%>"}'>
+                <button type='submit' class="btn btn-outline-dark"><i class="fas fa-cart-plus"></i> Add To Cart</button>
+              </form>
+                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% i++; %>
+<% })}; %>
+		</div>
+</div>
+
+
+
+<% include partials/footer %>

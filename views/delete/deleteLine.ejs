@@ -1,0 +1,32 @@
+<% include ../partials/header %>
+<div class="container" style="margin-top: 20px;">
+	<div class="card">
+	  <h5 class="card-header">Product Lines Control</h5>
+	  <div class="card-body">
+	  	<h3><em>Select Line To Delete</em></h2>
+		<div class="row">
+			<% lines.forEach(function(line){ %>
+		  <div class="col-sm-6" style="margin: 10px 0;">
+		    <div class="card">
+		      <div class="card-body">
+		        <h2 class="card-title"><%=line.name%></h2>
+		        <p><em>Contains the following models:</em></p>
+		        <p>
+		        <% line.products.forEach(function(product){ %>
+		        <strong><a target="_blank" rel="noopener noreferrer" href="<%=product.image%>" style='color: inherit;'><%=product.model%></a></strong><br>
+		        <% }); %>
+		        </p>
+		        <form action='/delete/line' method='post'>
+		        	<input type="hidden" name="selectedLine" value='<%=line._id%>'>
+		        	<button type='submit' class="btn btn-danger btn-sm">Delete line of products</button>
+		        </form>
+		      </div>
+		    </div>
+		  </div>
+		  <% }); %>
+		</div>
+	  </div>
+	</div>
+</div>
+
+<% include ../partials/footer %>

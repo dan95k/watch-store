@@ -1,0 +1,125 @@
+<% include ../partials/header %>
+<div class="container" style="margin-top: 30px;">
+	<table class="table table-sm table-dark table-hover">
+	  <thead>
+	    <tr>
+	      <th scope="col">#</th>
+	      <th scope="col">Name</th>
+	      <th scope="col">Address</th>
+	      <th scope="col">Items</th>
+	      <th scope="col">Traking No.</th>
+	      <th scope="col">Actions</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	<% if(costumers.length === 0){ %> <!-- no users with proccesing status -->
+	  		    <tr>
+			      <th scope="row">0</th>
+			      <td>No panding orders</td>
+			      <td>No panding orders</td>
+			      <td>No panding orders</td>
+			      <td>No panding orders</td>
+			      <td>No panding orders</td>
+			    </tr>
+	  	<% } if(costumers.length === 1){ %> <!-- only 1 user with proccesing status -->
+	  	<% if(costumers['0'].orders.length === 1){ %> <!-- if the user has just 1 order (the one with proccesing status) -->
+	  		    <tr>
+			      <th scope="row">1</th>
+			      <td><%=costumers['0'].orders['0'].buyerInfo.name%></td>
+			      <td><%=costumers['0'].orders['0'].buyerInfo.address_line1%>,<%=costumers['0'].orders['0'].buyerInfo.address_city%>,<%=costumers['0'].orders['0'].buyerInfo.address_country%></td>
+			      <td>
+			      	<% for(i=0;i<costumers['0'].orders['0'].products.length;i++){ %>
+			      		<a target="_blank" rel="noopener noreferrer" href="<%=costumers['0'].orders['0'].products[i].image%>"><%=costumers['0'].orders['0'].products[i].model%></a>,
+			      	<%}%>
+			      </td>
+			    <form action='/user/update-order/<%=costumers['0']._id%>/<%=costumers['0'].orders['0']._id%>' method='post'>
+			      <td><input type="text" class="form-control" name="tracking" placeholder='Tracking Number' required></td>
+			      <td>
+			      	<button type='submit' class="btn btn-success btn-block">Ship</button>
+			    </form>
+			      </td>
+			    </tr>	  	
+	  	<% } else { %> <!-- if the user has several orders (need to find the orders with "proccesing status") -->
+	  	<% for(i=0;i<costumers['0'].orders.length;i++){ %>
+	  		<% if(costumers['0'].orders[i].status === "Processing"){ %> <!-- checking which order has 'Processing' status -->
+	  		    <tr>
+			      <th scope="row">1</th>
+			      <td><%=costumers['0'].orders[i].buyerInfo.name%></td>
+			      <td><%=costumers['0'].orders[i].buyerInfo.address_line1%>,<%=costumers['0'].orders[i].buyerInfo.address_city%>,<%=costumers['0'].orders[i].buyerInfo.address_country%></td>
+			      <td>
+			      	<% for(j=0;j<costumers['0'].orders[i].products.length;j++){ %>
+			      		<a target="_blank" rel="noopener noreferrer" href="<%=costumers['0'].orders[i].products[j].image%>"><%=costumers['0'].orders[i].products[j].model%></a>,
+			      	<%}%>
+			      </td>
+			    <form action='/user/update-order/<%=costumers['0']._id%>/<%=costumers['0'].orders[i]._id%>' method='post'>
+			      <td><input type="text" class="form-control" name="tracking" placeholder='Tracking Number' required></td>
+			      <td>
+			      	<button type='submit' class="btn btn-success btn-block">Ship</button>
+			    </form>
+			      </td>
+			    </tr>
+	  	<%}}%>
+	<% }%>
+	  	<% } else {%> <!-- several users with proccesing status -->
+	  	<% for(k=0;k<costumers.length;k++){ %>
+	  	<% if(costumers[k].orders.length === 1){ %> <!-- if the user has just 1 order (the one with proccesing status) -->
+	  		    <tr>
+			      <th scope="row">1</th>
+			      <td><%=costumers[k].orders['0'].buyerInfo.name%></td>
+			      <td><%=costumers[k].orders['0'].buyerInfo.address_line1%>,<%=costumers[k].orders['0'].buyerInfo.address_city%>,<%=costumers[k].orders['0'].buyerInfo.address_country%></td>
+			      <td>
+			      	<% for(i=0;i<costumers[k].orders['0'].products.length;i++){ %>
+			      		<a target="_blank" rel="noopener noreferrer" href="<%=costumers[k].orders['0'].products[i].image%>"></a><%=costumers[k].orders['0'].products[i].model%>,
+			      	<%}%>
+			      </td>
+			    <form action='/user/update-order/<%=costumers[k]._id%>/<%=costumers[k].orders['0']._id%>' method='post'>
+			      <td><input type="text" class="form-control" name="tracking" placeholder='Tracking Number' required></td>
+			      <td>
+			      	<button type='submit' class="btn btn-success btn-block">Ship</button>
+			    </form>
+			      </td>
+			    </tr>	  	
+	  	<% } else { %> <!-- if the user has several orders (need to find the orders with "proccesing status") -->
+	  	<% for(i=0;i<costumers[k].orders.length;i++){ %>
+	  		<% if(costumers[k].orders[i].status === "Processing"){ %> <!-- checking which order has 'Processing' status -->
+	  		    <tr>
+			      <th scope="row">1</th>
+			      <td><%=costumers[k].orders[i].buyerInfo.name%></td>
+			      <td><%=costumers[k].orders[i].buyerInfo.address_line1%>,<%=costumers[k].orders[i].buyerInfo.address_city%>,<%=costumers[k].orders[i].buyerInfo.address_country%></td>
+			      <td>
+			      	<% for(j=0;j<costumers[k].orders[i].products.length;j++){ %>
+			      		<a target="_blank" rel="noopener noreferrer" href="<%=costumers[k].orders[i].products[j].image%>"><%=costumers[k].orders[i].products[j].model%></a>,
+			      	<%}%>
+			      </td>
+			    <form action='/user/update-order/<%=costumers[k]._id%>/<%=costumers[k].orders[i]._id%>' method='post'>
+			      <td><input type="text" class="form-control" name="tracking" placeholder='Tracking Number' required></td>
+			      <td>
+			      	<button type='submit' class="btn btn-success btn-block">Ship</button>
+			    </form>
+			      </td>
+			    </tr>
+	  	<%}}%>
+	<% }%>
+	  	<% }} %>
+<!-- 	    <tr>
+	      <th scope="row">1</th>
+	      <td>Mark</td>
+	      <td>Otto</td>
+	      <td>@mdo</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">2</th>
+	      <td>Jacob</td>
+	      <td>Thornton</td>
+	      <td>@fat</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">3</th>
+	      <td colspan="2">Larry the Bird</td>
+	      <td>@twitter</td>
+	    </tr> -->
+	  </tbody>
+	</table>
+</div>
+
+<% include ../partials/footer %>
